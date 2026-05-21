@@ -20,5 +20,3 @@ jobs:
     uses: ./.github/workflows/ci_windows.yml
   macos:
     uses: ./.github/workflows/ci_macos.yml
-  mingw:
-    uses: ./.github/workflows/ci_windows_mingw.yml
