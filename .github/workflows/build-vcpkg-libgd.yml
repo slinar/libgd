@@ -15,9 +15,11 @@ jobs:
         run: |
           apk update
           apk add git curl zip unzip tar pkgconfig build-base cmake ninja \
-                  autoconf automake libtool linux-headers
+                  autoconf automake libtool linux-headers gcompat
 
       - name: Install vcpkg and build musl static libgd
+        env:
+          VCPKG_FORCE_SYSTEM_BINARIES: 1
         run: |
           git clone https://github.com/microsoft/vcpkg.git
           cd vcpkg
