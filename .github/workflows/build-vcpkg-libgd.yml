@@ -1,4 +1,4 @@
-name: Build Static libgd via vcpkg
+name: Build Musl Static libgd (Alpine)
 
 on:
   push:
@@ -6,34 +6,37 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-static:
+  build-musl-static:
     runs-on: ubuntu-latest
+    container: alpine:latest
 
     steps:
-      - name: Install system dependencies
+      - name: Install Alpine system dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y curl zip unzip tar pkg-config autoconf autoconf-archive automake libtool
+          apk update
+          apk add git curl zip unzip tar pkgconfig build-base cmake ninja \
+                  autoconf automake libtool linux-headers
 
-      - name: Install vcpkg and build static libgd
+      - name: Install vcpkg and build musl static libgd
         run: |
           git clone https://github.com/microsoft/vcpkg.git
           cd vcpkg
           ./bootstrap-vcpkg.sh
           
-          cat <<EOF > triplets/x64-linux-static.cmake
+          mkdir -p triplets/community
+          cat <<EOF > triplets/x64-linux-musl-static.cmake
           set(VCPKG_TARGET_ARCHITECTURE x64)
-          set(VCPKG_CRT_LINKAGE dynamic)
+          set(VCPKG_CRT_LINKAGE static)
           set(VCPKG_LIBRARY_LINKAGE static)
           set(VCPKG_CMAKE_SYSTEM_NAME Linux)
           EOF
           
-          ./vcpkg install "libgd[core,png,jpeg,freetype,webp]:x64-linux-static"
+          ./vcpkg install "libgd[core,png,jpeg,freetype,webp]:x64-linux-musl-static"
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: vcpkg-libgd-static-output
+          name: vcpkg-libgd-musl-static-output
           path: |
-            vcpkg/installed/x64-linux-static/lib/
-            vcpkg/installed/x64-linux-static/include/
+            vcpkg/installed/x64-linux-musl-static/lib/
+            vcpkg/installed/x64-linux-musl-static/include/
