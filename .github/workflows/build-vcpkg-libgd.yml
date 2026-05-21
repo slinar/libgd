@@ -28,7 +28,7 @@ jobs:
           set(VCPKG_CMAKE_SYSTEM_NAME Linux)
           EOF
           
-          ./vcpkg install libgd:x64-linux-static
+          ./vcpkg install "libgd[core,png,jpeg,freetype,webp]:x64-linux-static"
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
