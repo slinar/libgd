@@ -1,0 +1,28 @@
+name: Build Static libgd via vcpkg
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build-static:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install vcpkg dependencies
+        run: sudo apt-get update && sudo apt-get install -y curl zip unzip tar pkg-config
+
+      - name: Install vcpkg and build static libgd
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git
+          ./vcpkg/bootstrap-vcpkg.sh
+          ./vcpkg/vcpkg install libgd:x64-linux-static
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vcpkg-libgd-static-output
+          path: |
+            vcpkg/installed/x64-linux-static/lib/
+            vcpkg/installed/x64-linux-static/include/
