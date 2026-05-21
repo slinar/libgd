@@ -10,8 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install vcpkg dependencies
-        run: sudo apt-get update && sudo apt-get install -y curl zip unzip tar pkg-config
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl zip unzip tar pkg-config autoconf autoconf-archive automake libtool
 
       - name: Install vcpkg and build static libgd
         run: |
